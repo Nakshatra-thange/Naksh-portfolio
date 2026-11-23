@@ -1,0 +1,264 @@
+/* ------------------------------------------------------------------
+   Naksh — Part A: the threshold
+   ------------------------------------------------------------------ */
+
+:root {
+  --ink: #000;
+  --mist: #e9e6e1;
+  --travel: 150vh;            /* scroll distance spent travelling into the eye */
+  --vh: 100vh;
+  color-scheme: dark;
+}
+
+@supports (height: 100lvh) {
+  :root { --vh: 100lvh; }
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  background: var(--ink);
+  scroll-behavior: auto;       /* JS owns every glide */
+  overscroll-behavior-y: none;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--ink);
+  color: var(--mist);
+  overflow-x: hidden;
+  font-family: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- The galaxy (fixed, behind everything) ---------- */
+
+.galaxy {
+  position: fixed;
+  inset: 0 0 auto 0;
+  width: 100%;
+  height: var(--vh);
+  display: block;
+  opacity: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ---------- The threshold ---------- */
+
+.threshold {
+  position: relative;
+  z-index: 1;
+  height: calc(var(--vh) + var(--travel));
+}
+
+.stage {
+  position: fixed;             /* pinned; scroll progress through .threshold drives it */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: var(--vh);
+  overflow: hidden;
+  background: var(--ink);
+  contain: layout paint;
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.world {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+/* Blurred, mirrored continuation of the footage for wide viewports.
+   Bleeds past the edges so the blur never shows a soft border. */
+.extend {
+  position: absolute;
+  left: -32px;
+  top: -32px;
+  width: calc(100% + 64px);
+  height: calc(100% + 64px);
+  display: block;
+  filter: blur(6px) brightness(0.8) saturate(0.92);
+  will-change: transform;
+}
+
+.frame {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.frame.is-extended {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 22%, #000 78%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0%, #000 22%, #000 78%, transparent 100%);
+}
+
+.intro,
+.crossfade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  background: transparent;
+}
+
+.crossfade { opacity: 0; pointer-events: none; }
+
+/* The pupil: a resolution-independent stand-in for the drawn eye, so the
+   camera can fall into it without the footage turning to pixels. */
+.pupil {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, #000 0 58%, rgba(0, 0, 0, 0.92) 66%, rgba(0, 0, 0, 0) 72%);
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, width, height, opacity;
+}
+
+/* A catch-light that appears on the chosen eye just before the plunge */
+.glint {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 96px;
+  height: 96px;
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 3%, rgba(255, 255, 255, 0.35) 7%, rgba(190, 210, 255, 0.12) 18%, rgba(0, 0, 0, 0) 46%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0) 8%, rgba(255, 255, 255, 0.5) 50%, rgba(0, 0, 0, 0) 92%) 50% 50% / 100% 1px no-repeat,
+    linear-gradient(0deg, rgba(0, 0, 0, 0) 22%, rgba(255, 255, 255, 0.35) 50%, rgba(0, 0, 0, 0) 78%) 50% 50% / 1px 100% no-repeat;
+  will-change: transform, opacity;
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 75% 70% at 50% 52%, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 0.42) 82%, rgba(0, 0, 0, 0.78) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.28) 0%, rgba(0, 0, 0, 0) 16%, rgba(0, 0, 0, 0) 80%, rgba(0, 0, 0, 0.42) 100%);
+  opacity: 0.6;
+}
+
+.grain {
+  position: absolute;
+  inset: -50%;
+  pointer-events: none;
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.4 -0.2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: grain 0.9s steps(6) infinite;
+}
+
+@keyframes grain {
+  0%   { transform: translate3d(0, 0, 0); }
+  20%  { transform: translate3d(-4%, 3%, 0); }
+  40%  { transform: translate3d(3%, -5%, 0); }
+  60%  { transform: translate3d(-6%, -2%, 0); }
+  80%  { transform: translate3d(5%, 4%, 0); }
+  100% { transform: translate3d(-2%, 6%, 0); }
+}
+
+/* ---------- Whisper (the only words on screen) ---------- */
+
+.whisper {
+  position: absolute;
+  left: 50%;
+  bottom: max(34px, calc(env(safe-area-inset-bottom) + 22px));
+  transform: translateX(-50%);
+  height: 1.2em;
+  width: 16em;
+  text-align: center;
+  pointer-events: none;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.42em;
+  text-transform: lowercase;
+  color: rgba(255, 255, 255, 0.78);
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.55);
+}
+
+.whisper__line {
+  position: absolute;
+  inset: 0;
+  padding-left: 0.42em;        /* optically re-centre the tracked text */
+  opacity: 0;
+  filter: blur(4px);
+  transition: opacity 1.1s ease, filter 1.1s ease;
+}
+
+.whisper.show-linger .whisper__line--linger,
+.whisper.show-enter .whisper__line--enter {
+  opacity: 1;
+  filter: blur(0);
+}
+
+.whisper.show-enter .whisper__line--enter {
+  animation: breathe 4.2s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.38; }
+  50%      { opacity: 0.85; }
+}
+
+.countdown {
+  position: absolute;
+  left: 50%;
+  bottom: max(24px, calc(env(safe-area-inset-bottom) + 12px));
+  width: 72px;
+  height: 1px;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.12);
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+}
+
+.countdown.is-on { opacity: 1; }
+
+.countdown span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.75);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+}
+
+/* ---------- Dimensions (future content lives here) ---------- */
+
+.dimension {
+  position: relative;
+  z-index: 2;
+  min-height: var(--vh);
+  background: transparent;
+}
+
+.dimension__inner {
+  min-height: inherit;
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .grain { animation: none; }
+  .whisper.show-enter .whisper__line--enter { animation: none; opacity: 0.7; }
+}
