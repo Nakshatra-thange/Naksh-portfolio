@@ -15,7 +15,21 @@
   --oxblood: #732002;
   --ink: #0d0b08;
   --mist: #f4efe4;
-  --travel: 150vh;            /* scroll distance spent travelling into the eye */
+  /* The atrium — after main_page.png */
+  --paper: #eee8dc;
+  --paper-light: #f4f0e7;
+  --paper-deep: #e2dacb;
+  --line: #958d7f;
+  --line-soft: rgba(149, 141, 127, 0.55);
+  --gold-line: #b39a6e;
+  --slate: #5b6b82;
+  --slate-deep: #42546c;
+  --on-slate: #ebe6da;
+  --sky-high: #8ea5bc;
+  --sky-low: #dfe2dc;
+  --serif: "Cormorant Garamond", "Cormorant", Garamond, "Times New Roman", serif;
+  --greek: "GFS Didot", "Cormorant Garamond", Didot, "Times New Roman", serif;
+  --travel: 150vh;            /* scroll distance spent travelling into the light */
   --vh: 100vh;
   color-scheme: light;
 }
@@ -29,33 +43,19 @@
 *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html {
-  background: var(--parchment);
+  background: var(--paper);
   scroll-behavior: auto;       /* JS owns every glide */
   overscroll-behavior-y: none;
   -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--parchment);
+  background: var(--paper);
   color: var(--mist);
   overflow-x: hidden;
   font-family: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
-}
-
-/* ---------- The classical hall (fixed, behind everything) ---------- */
-
-.athens {
-  position: fixed;
-  inset: 0 0 auto 0;
-  width: 100%;
-  height: var(--vh);
-  display: block;
-  opacity: 0;
-  z-index: 0;
-  background: var(--parchment);
-  pointer-events: none;
 }
 
 /* ---------- The threshold ---------- */
@@ -84,7 +84,6 @@ body {
   position: absolute;
   inset: 0;
   transform-origin: 50% 50%;
-  will-change: transform;
 }
 
 .frame {
@@ -125,36 +124,6 @@ body {
     rgba(232, 222, 200, 0.32) 60%,
     rgba(223, 221, 191, 0) 72%);
   will-change: transform, width, height, opacity;
-}
-
-.vignette {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse 75% 70% at 50% 52%, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 0.42) 82%, rgba(0, 0, 0, 0.78) 100%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.28) 0%, rgba(0, 0, 0, 0) 16%, rgba(0, 0, 0, 0) 80%, rgba(0, 0, 0, 0.42) 100%);
-  opacity: 0.6;
-}
-
-.grain {
-  position: fixed;
-  inset: -50%;
-  z-index: 5;
-  pointer-events: none;
-  opacity: 0.06;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.4 -0.2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  animation: grain 0.9s steps(6) infinite;
-}
-
-@keyframes grain {
-  0%   { transform: translate3d(0, 0, 0); }
-  20%  { transform: translate3d(-4%, 3%, 0); }
-  40%  { transform: translate3d(3%, -5%, 0); }
-  60%  { transform: translate3d(-6%, -2%, 0); }
-  80%  { transform: translate3d(5%, 4%, 0); }
-  100% { transform: translate3d(-2%, 6%, 0); }
 }
 
 /* ---------- Whisper (the only words on screen) ---------- */
@@ -224,22 +193,302 @@ body {
   transform: scaleX(0);
 }
 
+
+/* ---------- The atrium — after main_page.png ----------
+   Pinned behind the opening while the camera travels (sticky to the bottom of the viewport, so it
+   sits at the top), revealed out of the light, then scrolled away with the page like any section. */
+
+.atrium {
+  position: sticky;
+  bottom: 0;
+  z-index: 0;
+  height: var(--vh);
+  margin-top: calc(-1 * var(--vh));   /* overlaps the last viewport of the track: arrival = end of travel */
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  color: var(--line);
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(ellipse 80% 70% at 50% 45%, rgba(248, 245, 238, 0.7), rgba(248, 245, 238, 0) 70%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.45  0 0 0 0 0.4  0 0 0 0 0.33  0 0 0 0.09 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>");
+}
+
+.atrium__scene {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(24, minmax(0, 1fr));
+  grid-template-rows: repeat(24, minmax(0, 1fr));
+  transform-origin: 50% 46%;
+}
+
+.piece {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+}
+
+.piece img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+
+.piece img.is-loaded { opacity: 1; }
+
+.drawing {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: var(--line);
+  overflow: visible;
+}
+
+.drawing__note { font: italic 400 30px var(--serif); fill: var(--line); }
+.drawing__caps text { font: 500 15px var(--serif); letter-spacing: 0.34em; fill: var(--line); }
+
+/* Orders & meander */
+.piece--orders { grid-column: 1 / 13; grid-row: 1 / 4; z-index: 2; padding: 1.2% 0 0 2.4%; }
+
+/* Sky — the large arch behind the head */
+.piece--sky {
+  grid-column: 13 / 20;
+  grid-row: 1 / 11;
+  z-index: 1;
+  margin-top: -12%;
+  border-radius: 50% 50% 0 0 / 28% 28% 0 0;
+  background:
+    radial-gradient(ellipse 40% 18% at 34% 46%, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 70%),
+    radial-gradient(ellipse 50% 14% at 70% 62%, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 70%),
+    radial-gradient(ellipse 36% 12% at 58% 30%, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 70%),
+    linear-gradient(180deg, var(--sky-high) 0%, #a9bccb 45%, var(--sky-low) 100%);
+}
+
+/* Athena's head */
+.piece--head { grid-column: 12 / 17; grid-row: 1 / 6; z-index: 4; }
+.piece--head img { object-fit: contain; object-position: 50% 100%; }
+
+/* The Acropolis in an arch */
+.piece--acropolis {
+  grid-column: 10 / 20;
+  grid-row: 4 / 18;
+  z-index: 2;
+  overflow: hidden;
+  border-radius: 50% 50% 0 0 / 30% 30% 0 0;
+  background: linear-gradient(180deg, var(--sky-high), var(--sky-low));
+}
+.piece--acropolis img { object-position: 52% 60%; }
+
+/* Painting with a torn, wavy top edge */
+.piece--painting {
+  grid-column: 1 / 11;
+  grid-row: 3 / 15;
+  z-index: 2;
+  background: #b9c6cf;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'><path d='M0 6 C10 2 18 1 26 4 S40 10 48 6 S62 0 70 2 S84 6 92 3 L100 2 V100 H0 Z'/></svg>") 0 0 / 100% 100% no-repeat;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'><path d='M0 6 C10 2 18 1 26 4 S40 10 48 6 S62 0 70 2 S84 6 92 3 L100 2 V100 H0 Z'/></svg>") 0 0 / 100% 100% no-repeat;
+}
+.piece--painting img { object-position: 50% 22%; }
+
+/* Slate plates */
+.plate {
+  color: var(--on-slate);
+  background: var(--slate);
+}
+
+.plate__text { position: relative; z-index: 1; }
+
+.plate__title {
+  font: 500 clamp(13px, 1.25vw, 26px) / 1 var(--serif);
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+}
+
+.plate__words {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+  margin-top: 1.1em;
+  font: italic 500 clamp(13px, 1.2vw, 24px) / 1.15 var(--serif);
+  letter-spacing: 0.04em;
+}
+
+.plate__words em { font-style: italic; }
+
+.plate__greek {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55em;
+  font: 400 clamp(12px, 1.08vw, 22px) / 1 var(--greek);
+  letter-spacing: 0.22em;
+}
+
+.plate__rule {
+  display: block;
+  width: 2.2em;
+  height: 1px;
+  margin-top: 1.4em;
+  background: currentColor;
+  opacity: 0.8;
+  font-size: clamp(13px, 1.2vw, 24px);
+}
+
+.piece--sea {
+  grid-column: 1 / 7;
+  grid-row: 13 / 25;
+  z-index: 3;
+  display: flex;
+  align-items: flex-end;
+  background: linear-gradient(180deg, #4d6079 0%, var(--slate-deep) 100%);
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'><path d='M0 4 C14 0 26 6 40 5 S66 0 80 6 L100 12 V100 H0 Z'/></svg>") 0 0 / 100% 100% no-repeat;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'><path d='M0 4 C14 0 26 6 40 5 S66 0 80 6 L100 12 V100 H0 Z'/></svg>") 0 0 / 100% 100% no-repeat;
+}
+
+.plate__waves {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: rgba(225, 232, 236, 0.16);
+}
+
+.plate__text--athena { padding: 0 0 clamp(28px, 7vh, 80px) clamp(18px, 2.4vw, 46px); }
+
+.piece--ideals {
+  grid-column: 22 / 25;
+  grid-row: 8 / 20;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  padding: 0 0 0 clamp(14px, 1.6vw, 34px);
+}
+
+/* Corinthian capital */
+.piece--capital { grid-column: 5 / 13; grid-row: 15 / 25; z-index: 4; }
+.piece--capital img { object-fit: contain; object-position: 50% 100%; }
+
+/* Doryphoros on a drawing sheet */
+.piece--statue { grid-column: 20 / 25; grid-row: 1 / 8; z-index: 2; }
+.piece--statue img {
+  position: absolute;
+  left: 5%;
+  bottom: 9%;
+  width: 46%;
+  height: 88%;
+  object-fit: contain;
+  object-position: 50% 100%;
+}
+.sheet-lines { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--line-soft); }
+
+.label {
+  position: absolute;
+  right: 5%;
+  top: 30%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+  color: var(--line);
+}
+.label__caps { font: 500 clamp(10px, 0.95vw, 19px) / 1 var(--serif); letter-spacing: 0.26em; text-transform: uppercase; }
+.label em { font: italic 400 clamp(11px, 1vw, 20px) / 1 var(--serif); }
+
+/* Olive */
+.piece--olive { grid-column: 19 / 23; grid-row: 9 / 18; z-index: 3; }
+.olive { display: block; width: 100%; height: 100%; }
+.olive__leaves ellipse { fill: #8f9a7c; fill-opacity: 0.82; }
+.olive__leaves ellipse:nth-child(3n) { fill: #a5ae90; }
+.olive__leaves ellipse:nth-child(4n + 1) { fill: #7e8a6e; }
+
+/* Temple front card */
+.card {
+  background: var(--paper-light);
+  box-shadow: 0 0 0 1px rgba(149, 141, 127, 0.18);
+}
+.piece--temple { grid-column: 11 / 18; grid-row: 19 / 25; z-index: 3; margin-bottom: -3%; padding: 3% 4% 2%; }
+
+/* Floor plan */
+.piece--plan { grid-column: 17 / 25; grid-row: 18 / 25; z-index: 2; padding: 2% 3% 2% 4%; }
+
+/* A light wash over everything, as on the reference print */
+.atrium__wash {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 65% at 50% 45%, rgba(246, 243, 236, 0) 40%, rgba(246, 243, 236, 0.28) 100%),
+    rgba(246, 243, 236, 0.1);
+}
+
+/* Portrait screens: the same pieces, stacked for a tall frame */
+@media (max-aspect-ratio: 4/5) {
+  .atrium__scene {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: repeat(24, minmax(0, 1fr));
+  }
+  .piece--orders { display: none; }
+  .piece--statue { grid-column: 9 / 13; grid-row: 1 / 7; }
+  .piece--statue img { left: 4%; width: 80%; height: 70%; bottom: 6%; }
+  .piece--statue .label { left: 6%; right: auto; top: 6%; }
+  .piece--sky { grid-column: 2 / 10; grid-row: 1 / 8; margin-top: -20%; }
+  .piece--head { grid-column: 3 / 8; grid-row: 1 / 5; }
+  .piece--acropolis { grid-column: 2 / 12; grid-row: 3 / 13; }
+  .piece--painting { grid-column: 1 / 9; grid-row: 11 / 18; }
+  .piece--ideals { grid-column: 9 / 13; grid-row: 11 / 18; padding-left: 4.5vw; }
+  .piece--olive { grid-column: 10 / 13; grid-row: 19 / 25; }
+  .piece--capital { grid-column: 4 / 11; grid-row: 18 / 24; }
+  .piece--sea { grid-column: 1 / 6; grid-row: 17 / 25; }
+  .piece--plan { grid-column: 6 / 13; grid-row: 22 / 25; }
+  .piece--temple { display: none; }
+  .plate__title, .plate__words, .plate__rule { font-size: clamp(12px, 3.6vw, 20px); }
+  .plate__greek { font-size: clamp(9px, 2.6vw, 16px); letter-spacing: 0.14em; }
+  .piece--ideals .plate__words, .piece--ideals .plate__rule { font-size: clamp(11px, 3.2vw, 18px); }
+  .label__caps { font-size: clamp(8px, 2.3vw, 14px); }
+  .label em { font-size: clamp(9px, 2.6vw, 15px); }
+}
+
 /* ---------- Dimensions (future content lives here) ---------- */
 
 .dimension {
   position: relative;
   z-index: 2;
   min-height: var(--vh);
-  background: transparent;
+  color: #4a4741;
+  background-color: var(--paper);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.45  0 0 0 0 0.4  0 0 0 0 0.33  0 0 0 0.09 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>");
 }
 
 .dimension__inner {
   min-height: inherit;
+  width: min(100% - 32px, 1320px);
+  margin-inline: auto;
+  padding-block: clamp(48px, 10vh, 120px);
+}
+
+/* Image credits (CC BY requires attribution) */
+.credits {
+  position: relative;
+  z-index: 2;
+  background: var(--paper);
+  color: rgba(74, 71, 65, 0.6);
+  font: 400 12px / 1.6 var(--serif);
+  letter-spacing: 0.02em;
+}
+.credits p {
+  width: min(100% - 32px, 1320px);
+  margin-inline: auto;
+  padding-block: 18px max(18px, env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(149, 141, 127, 0.25);
 }
 
 /* ---------- Reduced motion ---------- */
 
 @media (prefers-reduced-motion: reduce) {
-  .grain { animation: none; }
   .whisper.show-enter .whisper__line--enter { animation: none; opacity: 0.7; }
+  .piece img { transition: none; }
 }

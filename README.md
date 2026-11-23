@@ -4,14 +4,28 @@ Static site, no build step. Serve the folder (e.g. `python3 -m http.server`) and
 
 ## Part A — the threshold
 
-- `assets/intro.webm` / `intro.mp4` — the opening footage, pre-cut to 5.0 s: source 0–3 s at normal speed,
-  then source 3–11 s at 4× (frame-blended for smooth motion). No audio. `intro-poster.jpg` is its first frame.
-- `index.html` — `#threshold` (opening + journey into the light) followed directly by `#dimension-1` (empty, for content).
-- `main.js` — layout, playback/loop, the push into the centre, auto-journey / stay logic, and the hall renderer (canvas).
-- `styles.css` — palette tokens and everything visual.
+1. **Opening** — `assets/intro.webm` / `assets/intro.mp4`: the 4K (3840×2160, 30 fps, 4.9 s) School of Athens
+   animation, played once from start to finish at 1×, untouched (no filters, overlays, canvas or re-encoding).
+2. **Transition** — when the footage ends, the camera carries its push-in on into the light between Plato and
+   Aristotle; the light swallows the frame.
+3. **Atrium** — `#atrium` emerges from the light: an editorial collage built after `assets/main_page.png`
+   (the design reference; it is not loaded by the page). The visitor then scrolls on into `#dimension-1`.
 
-Tunables at the top of `main.js`: `FOCUS` (point the camera travels into), `AUTO_AT`, `LOOP_END`, `AUTO_TRAVEL_MS`, `MAX_ZOOM`.
-Hall colours are in `COL` inside the `hall` module. The journey length is `--travel` in `styles.css`.
+Visitors can click/tap (or press Esc) to stay on the opening, which then loops with a dissolve.
 
-Add content inside `#dimension-1 .dimension__inner`, or add more `<section class="dimension">` blocks after it;
-the hall stays fixed behind them and the camera walks forward through its arches as the page scrolls.
+### Video delivery
+- `main.js` chooses the encode per device with `navigator.mediaCapabilities` (prefers the one decoded smoothly
+  and power-efficiently; VP9 WebM or H.264 MP4) and loads it with `?v=<data-version>` so old cached cuts can't
+  appear. **When replacing the videos, change `data-version` on `<video id="intro">`** (and the poster query).
+- `assets/intro-poster.jpg` is the first frame at 2560 px, shown only until the first frame decodes.
+- The atrium's images are requested only after the video reports `canplaythrough`, so they never compete with it.
+
+### Files
+- `index.html` — threshold, atrium (collage pieces), `#dimension-1` (empty, for content), image credits.
+- `main.js` — source selection, layout, playback/loop, the camera move, auto-journey / stay logic, atrium reveal.
+- `styles.css` — palette tokens, the atrium grid (24×24 on landscape, 12×24 on portrait screens).
+- `assets/main/` — collage images (WebP, several widths). Sources and licences are in the page footer.
+
+Tunables at the top of `main.js`: `FOCUS`, `AUTO_TRAVEL_MS`, `MAX_ZOOM`, `ZOOM_LINEAR`, `DEPART_SPEED`.
+The journey length is `--travel` in `styles.css`. Reusable styles for future content: `.plate`, `.card`,
+`.label`, `.drawing`.
