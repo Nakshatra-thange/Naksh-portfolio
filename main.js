@@ -158,9 +158,16 @@
     else if (state.stayed || state.journeyDone || reduceMotion) restartLoop();
   }
 
-  video.addEventListener('playing', () => {
-    if (!state.firstPlayStarted) state.firstPlayStarted = performance.now();
-  });
+  // The footage may already be playing (or even finished) before this script runs — on a fast connection
+  // or from a local file it starts the moment the page parses. Never rely on the 'playing' event alone.
+  function notePlayback() {
+    if (state.firstPlayStarted) return;
+    if (!video.paused || video.ended || video.currentTime > 0) {
+      state.firstPlayStarted = performance.now() - (video.currentTime || 0) * 1000;
+    }
+  }
+  video.addEventListener('playing', notePlayback);
+  video.addEventListener('timeupdate', notePlayback);
   video.addEventListener('ended', onFootageEnd);
   video.addEventListener('loadedmetadata', layout);
   // The atrium's images wait until the footage has what it needs, so they never compete with it.
@@ -312,6 +319,7 @@
     state.smy += (state.my - state.smy) * Math.min(1, dt * 2.2);
 
     // --- footage: plays in full at the threshold; rests on its last frame while the camera travels
+    notePlayback();
     const atTop = p <= 0.001;
     if (atTop) {
       if (!state.autoRunning) {
@@ -409,6 +417,7 @@
   video.addEventListener('error', () => console.warn('intro video failed to load', video.error), true);
 
   layout();
+  notePlayback();
   safePlay();
   requestAnimationFrame((t) => { last = t; frameLoop(t); });
 })();
