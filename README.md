@@ -14,9 +14,10 @@ Static site, no build step. Serve the folder (e.g. `python3 -m http.server`) and
 Visitors can click/tap (or press Esc) to stay on the opening, which then loops with a dissolve.
 
 ### Video delivery
-- `main.js` chooses the encode per device with `navigator.mediaCapabilities` (prefers the one decoded smoothly
-  and power-efficiently; VP9 WebM or H.264 MP4) and loads it with `?v=<data-version>` so old cached cuts can't
-  appear. **When replacing the videos, change `data-version` on `<video id="intro">`** (and the poster query).
+- The `<video>` lists `intro.mp4` (H.264) first and `intro.webm` (VP9) second; the browser plays the first it supports,
+  each with `?v=` so old cached cuts can't
+  appear. **When replacing the videos, change the `?v=` value on both sources and the poster.**
+- The opening is never skipped: if a browser refuses to autoplay, "tap to begin" appears and the camera waits.
 - `assets/intro-poster.jpg` is the first frame at 2560 px, shown only until the first frame decodes.
 - The atrium's images are requested only after the video reports `canplaythrough`, so they never compete with it.
 

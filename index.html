@@ -27,14 +27,16 @@
           <div class="frame">
             <!--
               The 4K footage, untouched: no filters, overlays or canvas in its path.
-              main.js picks the encode this device decodes best (VP9 WebM or H.264 MP4) and adds a version
-              query so a browser that cached an older cut can never show it. Bump data-version when replacing.
+              The browser plays the first source it supports: H.264 MP4 (hardware-decoded almost everywhere,
+              including Safari / iPhone), else VP9 WebM. The ?v= query makes sure no browser shows an older
+              cached cut — change it whenever the videos are replaced.
             -->
             <video id="intro" class="intro" muted playsinline autoplay preload="auto"
-                   poster="assets/intro-poster.jpg?v=4k-3659c942"
-                   data-webm="assets/intro.webm" data-mp4="assets/intro.mp4" data-version="4k-3659c942"
-                   width="3840" height="2160"
-                   disablepictureinpicture disableremoteplayback aria-hidden="true" tabindex="-1"></video>
+                   poster="assets/intro-poster.jpg?v=4k-3659c942" width="3840" height="2160"
+                   disablepictureinpicture disableremoteplayback aria-hidden="true" tabindex="-1">
+              <source src="assets/intro.mp4?v=4k-3659c942" type="video/mp4">
+              <source src="assets/intro.webm?v=4k-3659c942" type="video/webm">
+            </video>
             <!-- Holds the last frame (at full display resolution) while the loop restarts, so it dissolves instead of cutting -->
             <canvas class="crossfade" aria-hidden="true"></canvas>
           </div>
@@ -46,6 +48,7 @@
         <p class="whisper" aria-live="polite">
           <span class="whisper__line whisper__line--linger" data-touch="tap to linger" data-fine="click to linger">tap to linger</span>
           <span class="whisper__line whisper__line--enter">scroll to enter</span>
+          <span class="whisper__line whisper__line--begin" data-touch="tap to begin" data-fine="click to begin">tap to begin</span>
         </p>
         <div class="countdown" aria-hidden="true"><span></span></div>
       </div>

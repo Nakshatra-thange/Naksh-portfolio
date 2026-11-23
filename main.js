@@ -45,8 +45,9 @@
 
   const xfCtx = xfade.getContext('2d');
 
-  const lingerLine = whisper.querySelector('.whisper__line--linger');
-  lingerLine.textContent = finePointer ? lingerLine.dataset.fine : lingerLine.dataset.touch;
+  for (const line of whisper.querySelectorAll('[data-fine]')) {
+    line.textContent = finePointer ? line.dataset.fine : line.dataset.touch;
+  }
 
   // Every visit begins at the threshold.
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -92,41 +93,6 @@
     imagesRequested: false,
   };
 
-  // ---------- Footage source ---------------------------------------------
-  //
-  // Both files are the same 3840×2160 / 30 fps cut. Pick the one this device can decode smoothly
-  // (ideally in hardware): VP9 is a little more efficient, H.264 is decoded in hardware almost everywhere.
-  // The version query guarantees a browser that cached an older, lower-resolution cut never shows it.
-
-  const SOURCES = [
-    { url: video.dataset.webm, type: 'video/webm; codecs="vp09.00.51.08"' },
-    { url: video.dataset.mp4,  type: 'video/mp4; codecs="avc1.640033"' },
-  ];
-
-  async function chooseSource() {
-    const playable = SOURCES.filter((s) => video.canPlayType(s.type) !== '');
-    let pick = playable.find((s) => s.type.startsWith('video/mp4')) || playable[0] || SOURCES[1];
-
-    if (playable.length > 1 && navigator.mediaCapabilities && navigator.mediaCapabilities.decodingInfo) {
-      const ask = (s) => navigator.mediaCapabilities.decodingInfo({
-        type: 'file',
-        video: { contentType: s.type, width: 3840, height: 2160, bitrate: 45000000, framerate: 30 },
-      });
-      const timeout = new Promise((resolve) => setTimeout(() => resolve(null), 350));
-      try {
-        const infos = await Promise.race([Promise.all(playable.map(ask)), timeout]);
-        if (infos) {
-          const score = (i) => (i.supported ? 1 : 0) + (i.smooth ? 2 : 0) + (i.powerEfficient ? 4 : 0);
-          let best = -1;
-          infos.forEach((info, i) => { const sc = score(info); if (sc > best) { best = sc; pick = playable[i]; } });
-        }
-      } catch (_) { /* keep the H.264 default */ }
-    }
-
-    video.src = `${pick.url}?v=${encodeURIComponent(video.dataset.version || '1')}`;
-    safePlay();
-  }
-
   // ---------- Layout ------------------------------------------------------
 
   function layout() {
@@ -163,7 +129,6 @@
   // ---------- Footage -----------------------------------------------------
 
   function safePlay() {
-    if (!video.currentSrc && !video.src) return;
     if (state.playPending || !video.paused || video.ended && state.autoRunning) return;
     state.playPending = true;
     const pr = video.play();
@@ -215,7 +180,7 @@
   // ---------- Journey control --------------------------------------------
 
   function canAutoTravel() {
-    return !reduceMotion && !state.stayed && !state.journeyDone && !state.autoRunning &&
+    return !reduceMotion && !!state.firstPlayStarted && !state.stayed && !state.journeyDone && !state.autoRunning &&
            document.visibilityState === 'visible' && window.scrollY <= 1;
   }
 
@@ -315,8 +280,10 @@
 
   // A click or tap on the opening means "let me stay".
   stage.addEventListener('click', () => {
+    if (!state.firstPlayStarted) { safePlay(); return; }        // first click only starts the footage
     if (state.p < 0.98) { takeControl(); stayHere(); safePlay(); }
   });
+  stage.addEventListener('touchend', () => { if (!state.firstPlayStarted) safePlay(); }, { passive: true });
 
   window.addEventListener('pointermove', (e) => {
     state.mx = (e.clientX / window.innerWidth) * 2 - 1;
@@ -356,11 +323,8 @@
       state.atTopSince = now;
     }
 
-    // When the footage cannot autoplay at all (e.g. iOS low-power mode), travel after its length anyway.
-    if (atTop && !state.firstPlayStarted && canAutoTravel() &&
-        (state.autoplayBlocked ? now - state.loadedAt > (duration() + 0.7) * 1000 : now - state.loadedAt > 15000)) {
-      startAutoJourney();
-    }
+    // The footage is never skipped: if the browser refuses to autoplay it (e.g. iOS low-power mode),
+    // the visitor is invited to start it, and the journey only begins once it has played through.
 
     if (state.loopFade > 0) {
       state.loopFade = Math.max(0, state.loopFade - dt / LOOP_FADE);
@@ -423,6 +387,8 @@
                        !state.autoRunning && firstPlay > 0.6;
     const showEnter = atTop && (state.stayed || state.journeyDone || reduceMotion) &&
                       !state.autoRunning && (now - state.atTopSince) > 1400;
+    const showBegin = atTop && !state.firstPlayStarted && state.autoplayBlocked;
+    whisper.classList.toggle('show-begin', showBegin);
     whisper.classList.toggle('show-linger', showLinger);
     whisper.classList.toggle('show-enter', showEnter && !showLinger);
     countdown.classList.toggle('is-on', showLinger);
@@ -440,7 +406,9 @@
   // Images for the atrium are fetched once the footage is safely buffered, or after 8 s regardless.
   setTimeout(requestImages, 8000);
 
+  video.addEventListener('error', () => console.warn('intro video failed to load', video.error), true);
+
   layout();
-  chooseSource();
+  safePlay();
   requestAnimationFrame((t) => { last = t; frameLoop(t); });
 })();

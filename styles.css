@@ -155,7 +155,8 @@ body {
 }
 
 .whisper.show-linger .whisper__line--linger,
-.whisper.show-enter .whisper__line--enter {
+.whisper.show-enter .whisper__line--enter,
+.whisper.show-begin .whisper__line--begin {
   opacity: 1;
   filter: blur(0);
 }
