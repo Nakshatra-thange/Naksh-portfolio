@@ -40,6 +40,55 @@
   const countdownBar = countdown.querySelector('span');
   const atrium = $('#atrium');
   const scene = $('.atrium__scene');
+  const routeView = $('#portfolio-route');
+  const routeTitles = {
+    '/aboutme': 'About me',
+    '/voiceai': 'Everything about voice AI',
+    '/ai-and-me': 'AI and me',
+    '/fullstack': 'Fullstack',
+  };
+  const renderRoute = () => {
+    const path = window.location.pathname.replace(/\/$/, '') || '/';
+    const title = Object.hasOwn(routeTitles, path) ? routeTitles[path] : '';
+    const isAbout = path === '/aboutme';
+    document.body.classList.toggle('has-route', !!title);
+    routeView.hidden = !title;
+    routeView.querySelector('.portfolio-route__content').hidden = !title || isAbout;
+    routeView.querySelector('.about-page').hidden = !isAbout;
+    if (title && !isAbout) routeView.querySelector('.portfolio-route__content h1').textContent = title;
+  };
+  document.addEventListener('click', (event) => {
+    const targetElement = event.target instanceof Element ? event.target : event.target.parentElement;
+    const link = targetElement?.closest('a[data-route-link], a.folder[href]');
+    if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const target = new URL(link.href, window.location.href);
+    if (target.origin !== window.location.origin || !(Object.hasOwn(routeTitles, target.pathname) || target.pathname === '/')) return;
+    event.preventDefault();
+    if (target.pathname === '/') {
+      window.location.assign('/');
+      return;
+    }
+    history.pushState({}, '', target.pathname);
+    renderRoute();
+  });
+  window.addEventListener('popstate', renderRoute);
+  // A fresh page load always starts at the portfolio. Folder clicks switch
+  // routes in-place without reloading this document.
+  const initialPath = window.location.pathname.replace(/\/$/, '') || '/';
+  if (Object.hasOwn(routeTitles, initialPath)) history.replaceState({}, '', '/');
+  renderRoute();
+  const photoInput = $('#about-photo');
+  const photoPreview = $('#about-photo-preview');
+  const photoFrame = $('.id-card__photo');
+  let photoObjectUrl = '';
+  photoInput.addEventListener('change', () => {
+    const file = photoInput.files && photoInput.files[0];
+    if (!file) return;
+    if (photoObjectUrl) URL.revokeObjectURL(photoObjectUrl);
+    photoObjectUrl = URL.createObjectURL(file);
+    photoPreview.src = photoObjectUrl;
+    photoFrame.classList.add('has-photo');
+  });
   const pieces = Array.from(document.querySelectorAll('.piece[data-depth]'))
     .map((el) => ({ el, depth: parseFloat(el.dataset.depth) || 0, last: '' }));
 

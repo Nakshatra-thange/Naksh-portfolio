@@ -63,11 +63,13 @@ body {
 .threshold {
   position: relative;
   z-index: 1;
+  pointer-events: none;
   height: calc(var(--vh) + var(--travel));
 }
 
 .stage {
   position: fixed;             /* pinned; scroll progress through .threshold drives it */
+  pointer-events: auto;
   left: 0;
   top: 0;
   width: 100%;
@@ -203,6 +205,8 @@ body {
   position: sticky;
   bottom: 0;
   z-index: 0;
+  display: grid;
+  place-items: center;
   height: var(--vh);
   margin-top: calc(-1 * var(--vh));   /* overlaps the last viewport of the track: arrival = end of travel */
   overflow: hidden;
@@ -216,13 +220,91 @@ body {
 }
 
 .atrium__scene {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  width: min(74vw, 1160px, calc((var(--vh) - 48px) * 1.6));
+  aspect-ratio: 1.6;
   display: grid;
   grid-template-columns: repeat(24, minmax(0, 1fr));
   grid-template-rows: repeat(24, minmax(0, 1fr));
   transform-origin: 50% 46%;
+  filter: brightness(.82) saturate(.84);
 }
+.atrium__scene { z-index: 1; }
+
+.folder {
+  position: absolute;
+  z-index: 10;
+  display: block;
+  width: clamp(135px, 13vw, 190px);
+  height: clamp(112px, 14vh, 160px);
+  color: #373b3d;
+  text-decoration: none;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+  outline-offset: 6px;
+}
+.folder--about { left: max(18px, calc((100vw - 1160px) / 2 - 210px)); top: 14%; }
+.folder--voice { right: max(18px, calc((100vw - 1160px) / 2 - 210px)); top: 32%; }
+.folder--ai { left: max(18px, calc((100vw - 1160px) / 2 - 210px)); top: 58%; }
+.folder--fullstack { right: max(18px, calc((100vw - 1160px) / 2 - 210px)); top: 76%; }
+.atrium > .folder { z-index: 10; }
+.folder__visual {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 90%;
+  animation: folder-wiggle 4.8s ease-in-out infinite;
+}
+.folder__papers {
+  position: absolute;
+  top: 0;
+  left: 18%;
+  width: 62%;
+  height: 42%;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(88, 82, 72, 0.18);
+  border-radius: 3px 3px 0 0;
+  background: #f7f3e9;
+  color: #75899a;
+  font: 500 clamp(22px, 3vw, 42px) / 1 var(--serif);
+  transform: rotate(-7deg);
+  box-shadow: 3px 2px 0 rgba(61, 67, 72, 0.1);
+}
+.folder__body {
+  position: absolute;
+  inset: 22% 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: .5em;
+  padding: 10% 9%;
+  border-radius: 5px 12px 12px 12px;
+  background: #f0d77c;
+  box-shadow: 0 12px 24px rgba(48, 47, 40, .22), inset 0 1px 0 rgba(255,255,255,.78);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.folder__body::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -11%;
+  width: 44%;
+  height: 18%;
+  border-radius: 7px 8px 0 0;
+  background: inherit;
+  clip-path: polygon(0 0, 76% 0, 100% 100%, 0 100%);
+}
+.folder__title, .folder__hint { position: relative; z-index: 1; }
+.folder__title { font: 500 clamp(17px, 1.55vw, 23px) / 1.05 var(--serif); }
+.folder__hint { font: italic 400 clamp(12px, .95vw, 15px) / 1.2 var(--serif); opacity: .78; }
+.folder:hover .folder__body, .folder:focus-visible .folder__body { transform: translateY(-5px) rotate(-1deg); }
+.folder--voice .folder__body { background: #9ed9c7; }
+.folder--ai .folder__body { background: #d6b8f2; }
+.folder--fullstack .folder__body { background: #f1bd91; }
+@keyframes folder-wiggle { 0%, 100% { rotate: -1deg; } 50% { rotate: 1deg; } }
 
 .piece {
   position: relative;
@@ -230,6 +312,7 @@ body {
   min-height: 0;
   margin: 0;
 }
+.piece.folder { position: absolute; }
 
 .piece img {
   display: block;
@@ -429,6 +512,9 @@ body {
 /* Portrait screens: the same pieces, stacked for a tall frame */
 @media (max-aspect-ratio: 4/5) {
   .atrium__scene {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
     grid-template-columns: repeat(12, minmax(0, 1fr));
     grid-template-rows: repeat(24, minmax(0, 1fr));
   }
@@ -451,6 +537,194 @@ body {
   .piece--ideals .plate__words, .piece--ideals .plate__rule { font-size: clamp(11px, 3.2vw, 18px); }
   .label__caps { font-size: clamp(8px, 2.3vw, 14px); }
   .label em { font-size: clamp(9px, 2.6vw, 15px); }
+  .folder { width: min(42vw, 170px); height: 112px; }
+  .folder--about { left: 8px; top: 10%; }
+  .folder--voice { right: 8px; top: 33%; }
+  .folder--ai { left: 8px; top: 59%; }
+  .folder--fullstack { right: 8px; top: 80%; }
+}
+
+/* Winding desktop composition: artwork follows a tall, central curve. */
+@media (min-aspect-ratio: 4/5) {
+  .atrium {
+    position: relative;
+    display: block;
+    height: 220vh;
+    margin-top: calc(-1 * var(--vh));
+    overflow: hidden;
+  }
+  .atrium__scene {
+    width: min(90vw, 1040px);
+    height: 220vh;
+    margin-inline: auto;
+    aspect-ratio: auto;
+    grid-template-rows: repeat(60, minmax(0, 1fr));
+  }
+  .atrium__scene::before {
+    content: "";
+    position: absolute;
+    inset: 0 4%;
+    z-index: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, #9aafbd, #71859a 48%, #a5b2a3);
+    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 600' preserveAspectRatio='none'><path d='M62 -10 C62 28 35 38 35 78 C35 118 68 125 68 165 C68 205 37 218 37 258 C37 298 68 310 68 350 C68 390 36 402 36 442 C36 482 64 496 64 536 C64 566 48 584 48 610' fill='none' stroke='white' stroke-width='30' stroke-linecap='round'/></svg>") center / 100% 100% no-repeat;
+            mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 600' preserveAspectRatio='none'><path d='M62 -10 C62 28 35 38 35 78 C35 118 68 125 68 165 C68 205 37 218 37 258 C37 298 68 310 68 350 C68 390 36 402 36 442 C36 482 64 496 64 536 C64 566 48 584 48 610' fill='none' stroke='white' stroke-width='30' stroke-linecap='round'/></svg>") center / 100% 100% no-repeat;
+  }
+  .piece--orders { grid-column: 2 / 13; grid-row: 1 / 6; }
+  .piece--painting { grid-column: 12 / 24; grid-row: 6 / 20; }
+  .piece--sea { grid-column: 1 / 8; grid-row: 16 / 27; }
+  .piece--sky { grid-column: 3 / 12; grid-row: 23 / 34; }
+  .piece--head { grid-column: 5 / 10; grid-row: 23 / 31; }
+  .piece--acropolis { grid-column: 8 / 22; grid-row: 29 / 42; }
+  .piece--ideals { grid-column: 3 / 10; grid-row: 39 / 49; }
+  .piece--capital { grid-column: 13 / 24; grid-row: 37 / 49; }
+  .piece--olive { grid-column: 9 / 15; grid-row: 48 / 58; }
+  .piece--statue { grid-column: 16 / 24; grid-row: 49 / 57; }
+  .piece--temple { grid-column: 2 / 11; grid-row: 53 / 61; }
+  .piece--plan { grid-column: 12 / 24; grid-row: 54 / 61; }
+  .folder--about { left: max(18px, calc((100vw - min(90vw, 1040px)) / 2 - 172px)); top: 8%; }
+  .folder--voice { right: max(18px, calc((100vw - min(90vw, 1040px)) / 2 - 172px)); top: 29%; }
+  .folder--ai { left: max(18px, calc((100vw - min(90vw, 1040px)) / 2 - 172px)); top: 52%; }
+  .folder--fullstack { right: max(18px, calc((100vw - min(90vw, 1040px)) / 2 - 172px)); top: 76%; }
+}
+
+/* ---------- Client-side portfolio routes ---------- */
+
+body.has-route main { display: none; }
+.portfolio-route {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: clamp(24px, 6vw, 80px);
+  color: #161616;
+  background: #fff;
+}
+.portfolio-route__back {
+  position: absolute;
+  top: max(24px, env(safe-area-inset-top));
+  left: max(24px, env(safe-area-inset-left));
+  z-index: 5;
+  color: #333;
+  font: 500 16px / 1.2 var(--serif);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+.portfolio-route__content { width: min(100%, 760px); }
+.portfolio-route__eyebrow { margin-bottom: 16px; color: #718398; font: 500 13px / 1.2 var(--serif); letter-spacing: .22em; text-transform: uppercase; }
+.portfolio-route__content h1 { font: 400 clamp(48px, 9vw, 104px) / .95 var(--serif); }
+.portfolio-route__note { margin-top: 28px; color: #817b70; font: italic 400 clamp(18px, 2vw, 24px) / 1.4 var(--serif); }
+
+.about-page { position: absolute; inset: 0; overflow: hidden; background: #fff; }
+.about-composition {
+  position: absolute;
+  left: 50%;
+  top: 51%;
+  display: flex;
+  align-items: center;
+  gap: clamp(32px, 6vw, 92px);
+  width: max-content;
+  transform: translate(-50%, -50%);
+}
+.about-title {
+  display: flex;
+  flex-direction: column;
+  color: #080808;
+  font: 900 clamp(74px, 11vw, 156px) / .76 Impact, "Arial Black", "Helvetica Neue", sans-serif;
+  letter-spacing: -.065em;
+  text-transform: uppercase;
+}
+.about-title span { display: block; }
+.id-lanyard {
+  position: absolute;
+  z-index: 1;
+  left: 139px;
+  top: calc(-1 * (50vh - 205px));
+  width: 20px;
+  height: calc(50vh - 205px);
+  border-inline: 1px solid #b7b7b7;
+  background: repeating-linear-gradient(180deg, transparent 0 7px, rgba(0,0,0,.09) 7px 8px);
+}
+.id-lanyard span {
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+  width: 15px;
+  height: 18px;
+  border: 2px solid #444;
+  border-radius: 4px;
+  transform: translateX(-50%);
+}
+.about-id-card {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 278px;
+  min-height: 390px;
+  padding: 25px 23px 17px;
+  border: 1px solid #b8b8b8;
+  border-radius: 9px;
+  background: rgba(255,255,255,.94);
+  box-shadow: 0 10px 25px rgba(0,0,0,.18), inset 0 0 0 5px rgba(0,0,0,.025);
+}
+.id-card__clip {
+  position: absolute;
+  top: -14px;
+  left: calc(50% - 15px);
+  width: 30px;
+  height: 18px;
+  border: 2px solid #444;
+  border-radius: 4px 4px 8px 8px;
+  background: #eee;
+}
+.id-card__heading { margin-bottom: 14px; color: #111; font: 900 18px / .9 Impact, "Arial Black", sans-serif; letter-spacing: .02em; }
+.id-card__heading span { font-size: 11px; letter-spacing: .2em; }
+.id-card__photo {
+  position: relative;
+  display: grid;
+  place-items: center;
+  align-self: center;
+  width: 92px;
+  height: 106px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  border: 1px solid #aaa;
+  background: repeating-linear-gradient(135deg, #f4f4f4 0 8px, #e8e8e8 8px 16px);
+  color: #666;
+  cursor: pointer;
+  font: 700 10px / 1.2 Arial, sans-serif;
+  letter-spacing: .08em;
+  text-align: center;
+}
+.id-card__photo img { display: none; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1); }
+.id-card__photo.has-photo img { display: block; }
+.id-card__photo.has-photo span { display: none; }
+.id-card__upload { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.id-card__field { display: flex; flex-direction: column; gap: 3px; padding: 6px 0 5px; border-bottom: 1px solid #c9c9c9; }
+.id-card__field span { color: #333; font: 700 8px / 1 Arial, sans-serif; letter-spacing: .14em; }
+.id-card__field input { width: 100%; border: 0; outline: 0; background: transparent; color: #151515; font: 500 13px / 1.2 var(--serif); }
+.id-card__field input::placeholder { color: #8c8c8c; opacity: 1; }
+.id-card__footer { margin-top: auto; padding-top: 10px; color: #444; font: 700 8px / 1 Arial, sans-serif; letter-spacing: .12em; }
+.about-architecture, .about-architecture-drawing { position: absolute; z-index: 0; pointer-events: none; filter: grayscale(1) contrast(1.15); mix-blend-mode: multiply; }
+.about-architecture--acropolis { left: -8vw; top: 14%; width: 32vw; height: 52vh; object-fit: cover; opacity: .22; }
+.about-architecture--capital { right: -7vw; top: 4%; width: 31vw; height: 76vh; object-fit: contain; opacity: .24; }
+.about-architecture--statue { left: 39%; bottom: -24%; width: 16vw; height: 52vh; object-fit: contain; opacity: .17; }
+.about-architecture-drawing { right: 13%; bottom: -20%; width: 17vw; height: 67vh; color: #222; opacity: .28; }
+.about-caption { position: absolute; left: 32px; bottom: 24px; color: #555; font: italic 400 13px / 1.2 var(--serif); }
+
+@media (max-width: 700px) {
+  .about-composition { top: 51%; flex-direction: column-reverse; gap: 22px; width: min(100% - 48px, 420px); }
+  .about-title { flex-direction: row; gap: .18em; font-size: clamp(50px, 15vw, 84px); line-height: .85; }
+  .about-id-card { width: min(278px, 75vw); min-height: 350px; }
+  .id-lanyard { display: none; }
+  .about-architecture--acropolis { left: -25vw; top: 10%; width: 58vw; height: 38vh; }
+  .about-architecture--capital { right: -24vw; top: 8%; width: 55vw; height: 42vh; }
+  .about-architecture--statue { display: none; }
+  .about-architecture-drawing { right: 4%; bottom: -16%; width: 32vw; height: 40vh; }
 }
 
 /* ---------- Dimensions (future content lives here) ---------- */

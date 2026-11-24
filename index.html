@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=GFS+Didot&display=swap">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=portfolio-home-20261123">
 </head>
 <body>
 
@@ -248,6 +248,18 @@
         <!-- A light wash over everything, like a print left in the sun -->
         <div class="atrium__wash" aria-hidden="true"></div>
       </div>
+      <a class="piece folder folder--about" data-depth="0.9" href="/aboutme" aria-label="Open About me">
+        <span class="folder__visual"><span class="folder__papers" aria-hidden="true">✳</span><span class="folder__body"><span class="folder__title">About me</span><span class="folder__hint">A little about the person</span></span></span>
+      </a>
+      <a class="piece folder folder--voice" data-depth="1.1" href="/voiceai" aria-label="Open Everything about voice AI">
+        <span class="folder__visual"><span class="folder__papers" aria-hidden="true">◖</span><span class="folder__body"><span class="folder__title">Voice AI</span><span class="folder__hint">Everything about voice AI</span></span></span>
+      </a>
+      <a class="piece folder folder--ai" data-depth="0.8" href="/ai-and-me" aria-label="Open AI and me">
+        <span class="folder__visual"><span class="folder__papers" aria-hidden="true">✦</span><span class="folder__body"><span class="folder__title">AI and me</span><span class="folder__hint">Ideas, experiments, notes</span></span></span>
+      </a>
+      <a class="piece folder folder--fullstack" data-depth="1.2" href="/fullstack" aria-label="Open Fullstack">
+        <span class="folder__visual"><span class="folder__papers" aria-hidden="true">⌘</span><span class="folder__body"><span class="folder__title">Fullstack</span><span class="folder__hint">Things I build for the web</span></span></span>
+      </a>
     </section>
 
     <!--
@@ -270,6 +282,40 @@
     </footer>
   </main>
 
+  <section class="portfolio-route" id="portfolio-route" aria-live="polite" hidden>
+    <a class="portfolio-route__back" href="/" data-route-link>← Back to the portfolio</a>
+    <div class="portfolio-route__content"><p class="portfolio-route__eyebrow">A new dimension</p><h1></h1><p class="portfolio-route__note">This space is ready for your story.</p></div>
+    <div class="about-page" hidden>
+      <img class="about-architecture about-architecture--acropolis" src="assets/main/acropolis-1000.webp" alt="The Acropolis above Athens">
+      <img class="about-architecture about-architecture--capital" src="assets/main/capital-640.webp" alt="Carved Corinthian capital">
+      <img class="about-architecture about-architecture--statue" src="assets/main/doryphoros-450.webp" alt="Classical Greek statue">
+      <svg class="about-architecture-drawing" viewBox="0 0 260 560" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M28 174 130 110l102 64H28Zm10 14h184v24H38zm14 24v236m26-236v236m34-236v236m36-236v236m34-236v236m26-236v236M28 448h204v26H28zm-12 28h228v20H16z"/>
+          <path d="M14 504h232M130 42v68M110 60h40M98 77h64" stroke-dasharray="7 7"/>
+        </g>
+      </svg>
+      <div class="about-composition">
+        <div class="id-lanyard" aria-hidden="true"><span></span></div>
+        <div class="about-id-card">
+          <div class="id-card__clip" aria-hidden="true"></div>
+          <p class="id-card__heading">CREATIVE<br><span>IDENTITY</span></p>
+          <label class="id-card__photo" for="about-photo">
+            <img id="about-photo-preview" alt="Your portrait preview">
+            <span>ADD PHOTO</span>
+          </label>
+          <input class="id-card__upload" id="about-photo" type="file" accept="image/*" aria-label="Choose your photo">
+          <label class="id-card__field"><span>NAME</span><input type="text" placeholder="Your name" autocomplete="name"></label>
+          <label class="id-card__field"><span>FOCUS</span><input type="text" placeholder="What you do"></label>
+          <label class="id-card__field"><span>BASED IN</span><input type="text" placeholder="Your city"></label>
+          <p class="id-card__footer">ATHENS · EST. IN IDEAS</p>
+        </div>
+        <h1 class="about-title"><span>ABOUT</span><span>ME</span></h1>
+      </div>
+      <p class="about-caption">A portrait in progress</p>
+    </div>
+  </section>
+
   <noscript>
     <style>.threshold{height:100vh}.stage{position:relative}.whisper,.countdown,.intro{display:none}.atrium{position:relative;margin-top:0;opacity:1;visibility:visible}.piece img{opacity:1}.noscript-intro{position:absolute;top:0;left:0;width:100%;height:100vh;object-fit:cover;z-index:3}</style>
     <video class="noscript-intro" muted playsinline autoplay loop poster="assets/intro-poster.jpg?v=4k-3659c942">
@@ -278,6 +324,6 @@
     </video>
   </noscript>
 
-  <script src="main.js" defer></script>
+  <script src="main.js?v=portfolio-home-20261123" defer></script>
 </body>
 </html>
