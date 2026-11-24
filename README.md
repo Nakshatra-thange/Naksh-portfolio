@@ -1,6 +1,6 @@
 # Naksh — portfolio
 
-Static site, no build step. Serve the folder (e.g. `python3 -m http.server`) and open `index.html`.
+Static site, no build step. Run `python3 dev_server.py` and open `http://localhost:8000/`. The local server falls back to `index.html` for client-side routes such as `/aboutme`.
 
 ## Part A — the threshold
 

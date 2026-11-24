@@ -3,14 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <base href="/">
   <meta name="theme-color" content="#eeeae1">
   <meta name="color-scheme" content="light">
   <title>Naksh</title>
   <meta name="description" content="Many faces. Many dimensions.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=GFS+Didot&display=swap">
-  <link rel="stylesheet" href="styles.css?v=portfolio-home-20261123">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&family=Caveat:wght@400;500;600;700&family=Dancing+Script:wght@400;700&family=Kalam:wght@300;400&family=Playwrite+US+Modern:wght@100..400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=GFS+Didot&display=swap">
+  <link rel="stylesheet" href="styles.css?v=passage-scroll-20261124n">
 </head>
 <body>
 
@@ -248,19 +249,24 @@
         <!-- A light wash over everything, like a print left in the sun -->
         <div class="atrium__wash" aria-hidden="true"></div>
       </div>
-      <a class="piece folder folder--about" data-depth="0.9" href="/aboutme" aria-label="Open About me">
+      <a class="piece folder folder--about" data-depth="0.9" href="/aboutme/" aria-label="Open About me">
         <span class="folder__visual"><span class="folder__papers" aria-hidden="true">✳</span><span class="folder__body"><span class="folder__title">About me</span><span class="folder__hint">A little about the person</span></span></span>
       </a>
-      <a class="piece folder folder--voice" data-depth="1.1" href="/voiceai" aria-label="Open Everything about voice AI">
+      <a class="piece folder folder--voice" data-depth="1.1" href="/voiceai/" aria-label="Open Everything about voice AI">
         <span class="folder__visual"><span class="folder__papers" aria-hidden="true">◖</span><span class="folder__body"><span class="folder__title">Voice AI</span><span class="folder__hint">Everything about voice AI</span></span></span>
       </a>
-      <a class="piece folder folder--ai" data-depth="0.8" href="/ai-and-me" aria-label="Open AI and me">
+      <a class="piece folder folder--ai" data-depth="0.8" href="/ai-and-me/" aria-label="Open AI and me">
         <span class="folder__visual"><span class="folder__papers" aria-hidden="true">✦</span><span class="folder__body"><span class="folder__title">AI and me</span><span class="folder__hint">Ideas, experiments, notes</span></span></span>
       </a>
-      <a class="piece folder folder--fullstack" data-depth="1.2" href="/fullstack" aria-label="Open Fullstack">
+      <a class="piece folder folder--fullstack" data-depth="1.2" href="/fullstack/" aria-label="Open Fullstack">
         <span class="folder__visual"><span class="folder__papers" aria-hidden="true">⌘</span><span class="folder__body"><span class="folder__title">Fullstack</span><span class="folder__hint">Things I build for the web</span></span></span>
       </a>
     </section>
+
+    <!-- The line shown in the light between the painting and the atrium; its fade is tied to scroll (main.js). -->
+    <div class="passage" aria-hidden="true">
+      <p class="passage__text">A room full of people arguing about first principles.<br>Shipping things those principles turn into</p>
+    </div>
 
     <!--
       THE FIRST DIMENSION — directly below the atrium, on the same page.
@@ -272,8 +278,25 @@
       <div class="dimension__inner"></div>
     </section>
 
-    <footer class="credits">
-      <p>
+    <footer class="site-footer" aria-label="Contact and socials">
+      <div class="site-footer__inner">
+        <svg class="site-footer__ornament" viewBox="0 0 260 40" aria-hidden="true">
+          <g fill="none" stroke="currentColor" stroke-width="1.1">
+            <path d="M0 20 H96 M164 20 H260"/>
+            <path d="M110 30 L130 10 L150 30 Z"/>
+            <path d="M114 30 H146 M118 30 V36 M126 30 V36 M134 30 V36 M142 30 V36 M110 37 H150"/>
+          </g>
+        </svg>
+        <p class="site-footer__kicker">Come say hello</p>
+        <ul class="site-footer__links">
+          <li><a href="https://x.com/nakshatraavijay" target="_blank" rel="noopener noreferrer">Twitter / X</a></li>
+          <li><a href="https://www.linkedin.com/in/nakshatra-thange/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+          <li><a href="https://github.com/Nakshatra-thange" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+          <li><a href="mailto:nakshatrathange@gmail.com">nakshatrathange@gmail.com</a></li>
+        </ul>
+        <p class="site-footer__sign">Nakshatra Thange · Pune</p>
+      </div>
+      <p class="credits">
         Images: the Acropolis from Philopappos Hill, George E. Koronaios (CC0) ·
         Doryphoros, Museo Archeologico Nazionale di Napoli, photo Marie-Lan Nguyen (CC BY 2.5) ·
         Marble head of Athena and Corinthian pilaster capital, The Metropolitan Museum of Art (CC0) ·
@@ -286,6 +309,7 @@
     <a class="portfolio-route__back" href="/" data-route-link>← Back to the portfolio</a>
     <div class="portfolio-route__content"><p class="portfolio-route__eyebrow">A new dimension</p><h1></h1><p class="portfolio-route__note">This space is ready for your story.</p></div>
     <div class="about-page" hidden>
+      <section class="about-hero" aria-label="About me">
       <img class="about-architecture about-architecture--acropolis" src="assets/main/acropolis-1000.webp" alt="The Acropolis above Athens">
       <img class="about-architecture about-architecture--capital" src="assets/main/capital-640.webp" alt="Carved Corinthian capital">
       <img class="about-architecture about-architecture--statue" src="assets/main/doryphoros-450.webp" alt="Classical Greek statue">
@@ -299,20 +323,177 @@
         <div class="id-lanyard" aria-hidden="true"><span></span></div>
         <div class="about-id-card">
           <div class="id-card__clip" aria-hidden="true"></div>
-          <p class="id-card__heading">CREATIVE<br><span>IDENTITY</span></p>
-          <label class="id-card__photo" for="about-photo">
-            <img id="about-photo-preview" alt="Your portrait preview">
-            <span>ADD PHOTO</span>
-          </label>
-          <input class="id-card__upload" id="about-photo" type="file" accept="image/*" aria-label="Choose your photo">
-          <label class="id-card__field"><span>NAME</span><input type="text" placeholder="Your name" autocomplete="name"></label>
-          <label class="id-card__field"><span>FOCUS</span><input type="text" placeholder="What you do"></label>
-          <label class="id-card__field"><span>BASED IN</span><input type="text" placeholder="Your city"></label>
+          <p class="id-card__heading">NAKSHATRA<br><span>THANGE</span></p>
+          <img id="about-photo-preview" src="assets/me.png" alt="Nakshatra">
+          <label class="id-card__field"><span>FOCUS</span><input type="text" value="Voice AI · Fullstack"></label>
+          <label class="id-card__field"><span>BASED IN</span><input type="text" value="Pune, India"></label>
           <p class="id-card__footer">ATHENS · EST. IN IDEAS</p>
         </div>
         <h1 class="about-title"><span>ABOUT</span><span>ME</span></h1>
       </div>
       <p class="about-caption">A portrait in progress</p>
+      </section>
+
+      <section class="about-story" aria-label="About Nakshatra">
+        <div class="about-story__inner">
+          <p class="handwritten-kicker">A little about me</p>
+          <p class="about-lead">I'm Nakshatra. I build voice AI and fullstack products, and I read too much philosophy for someone who writes this much code.</p>
+
+          <div class="about-story__columns">
+            <section class="handwritten-section">
+              <ul class="handwritten-list">
+                <li>Final-year engineering student at VIT (Vellore Institute of Technology), from Pune.</li>
+                <li>Spent the last few years building fullstack products. Now deep into voice AI: latency, interruptions, and why a 300ms pause can make an agent feel broken.</li>
+                <li>Philosophy and psychology got to me before code did. They're why I ask “why should we build this?” before “how?”</li>
+                <li>Looking to join early-stage startups where I can own a problem from idea to production.</li>
+              </ul>
+            </section>
+
+            <section class="handwritten-section about-navigation">
+              <h2>Find your way around</h2>
+              <ul class="handwritten-list handwritten-list--links">
+                <li><a href="/fullstack/">Things I've built across fullstack work</a></li>
+                <li><a href="/voiceai/">My experiments and products in voice AI</a></li>
+                <li><a href="/ai-and-me/">AI and me: where I think out loud about machines and minds</a></li>
+                <li><a href="/essays/">Some essays I've written, mostly philosophy, psychology and AI</a></li>
+                <li><a href="/know-me-better">Get to know me better :)</a></li>
+              </ul>
+              <p class="about-email">You can reach me at <a href="mailto:nakshatrathange@gmail.com">nakshatrathange@gmail.com</a>.</p>
+            </section>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="essays-page" hidden>
+      <img class="about-architecture about-architecture--acropolis" src="assets/main/acropolis-1000.webp" alt="">
+      <img class="about-architecture about-architecture--capital" src="assets/main/capital-640.webp" alt="">
+      <img class="about-architecture about-architecture--statue" src="assets/main/doryphoros-450.webp" alt="">
+      <svg class="about-architecture-drawing" viewBox="0 0 260 560" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M28 174 130 110l102 64H28Zm10 14h184v24H38zm14 24v236m26-236v236m34-236v236m36-236v236m34-236v236m26-236v236M28 448h204v26H28zm-12 28h228v20H16z"/>
+          <path d="M14 504h232M130 42v68M110 60h40M98 77h64" stroke-dasharray="7 7"/>
+        </g>
+      </svg>
+      <div class="essays-page__inner">
+        <p class="portfolio-route__eyebrow">Where I write</p>
+        <h1>Essays</h1>
+        <p class="portfolio-route__note">Mostly philosophy, psychology and AI.</p>
+        <ul class="essays-links">
+          <li><a href="https://substack.com/@nakshatrawrites" target="_blank" rel="noopener"><span class="essays-links__name">Substack</span><span class="essays-links__handle">@nakshatrawrites ↗</span></a></li>
+          <li><a href="https://medium.com/@nakshatrathange" target="_blank" rel="noopener"><span class="essays-links__name">Medium</span><span class="essays-links__handle">@nakshatrathange ↗</span></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-page" id="voice-page" hidden>
+      <header class="topic-hero">
+        <img class="about-architecture about-architecture--acropolis" src="assets/main/acropolis-1000.webp" alt="">
+        <img class="about-architecture about-architecture--capital" src="assets/main/capital-640.webp" alt="">
+        <svg class="about-architecture-drawing" viewBox="0 0 260 560" aria-hidden="true">
+          <g fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M28 174 130 110l102 64H28Zm10 14h184v24H38zm14 24v236m26-236v236m34-236v236m36-236v236m34-236v236m26-236v236M28 448h204v26H28zm-12 28h228v20H16z"/>
+            <path d="M14 504h232M130 42v68M110 60h40M98 77h64" stroke-dasharray="7 7"/>
+          </g>
+        </svg>
+        <div class="topic-hero__inner">
+          <p class="portfolio-route__eyebrow">Everything about</p>
+          <h1>Voice AI</h1>
+          <p class="portfolio-route__note">Echo, interruptions and the hard question of when someone has finished speaking.</p>
+        </div>
+      </header>
+
+      <div class="topic-page__body">
+        <!-- ===== RESEARCH: cards are rendered from RESEARCH in voiceai.js ===== -->
+        <section class="topic-section voice-research" aria-labelledby="voice-research-title">
+          <h2 class="topic-section__title" id="voice-research-title">Research</h2>
+          <div class="acc-list-wrap" id="research-list"></div>
+        </section>
+
+        <!-- ===== PROJECTS: cards are rendered from PROJECTS in voiceai.js ===== -->
+        <section class="topic-section voice-projects" aria-labelledby="voice-projects-title">
+          <h2 class="topic-section__title" id="voice-projects-title">Projects</h2>
+          <div class="acc-list-wrap" id="projects-list"></div>
+        </section>
+      </div>
+    </div>
+
+    <div class="topic-page" id="ai-page" hidden>
+      <header class="topic-hero">
+        <img class="about-architecture about-architecture--acropolis" src="assets/main/acropolis-1000.webp" alt="">
+        <img class="about-architecture about-architecture--capital" src="assets/main/capital-640.webp" alt="">
+        <svg class="about-architecture-drawing" viewBox="0 0 260 560" aria-hidden="true">
+          <g fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M28 174 130 110l102 64H28Zm10 14h184v24H38zm14 24v236m26-236v236m34-236v236m36-236v236m34-236v236m26-236v236M28 448h204v26H28zm-12 28h228v20H16z"/>
+            <path d="M14 504h232M130 42v68M110 60h40M98 77h64" stroke-dasharray="7 7"/>
+          </g>
+        </svg>
+        <div class="topic-hero__inner">
+          <p class="portfolio-route__eyebrow">Where I think out loud</p>
+          <h1>AI and me</h1>
+          <p class="portfolio-route__note">Things I've built with machines, and what they taught me.</p>
+        </div>
+      </header>
+
+      <div class="topic-page__body">
+        <!-- ===== PROJECTS: cards are rendered from AI_PROJECTS (section: 'projects') in aiandme.js ===== -->
+        <section class="topic-section" aria-labelledby="ai-projects-title">
+          <h2 class="topic-section__title" id="ai-projects-title">Projects</h2>
+          <div class="acc-list-wrap" id="ai-projects-list"></div>
+        </section>
+
+        <!-- ===== RESEARCH + PROJECT: cards are rendered from AI_PROJECTS (section: 'research') in aiandme.js ===== -->
+        <section class="topic-section" aria-labelledby="ai-research-title">
+          <h2 class="topic-section__title" id="ai-research-title">Research + Project</h2>
+          <div class="acc-list-wrap" id="ai-research-list"></div>
+        </section>
+
+        <!-- ===== WHAT FASCINATES ME: placeholder, content coming later ===== -->
+        <section class="topic-section" aria-labelledby="ai-fascinates-title">
+          <h2 class="topic-section__title" id="ai-fascinates-title">What fascinates me</h2>
+          <!-- Content coming later. -->
+        </section>
+      </div>
+    </div>
+
+    <div class="topic-page" id="fullstack-page" hidden>
+      <header class="topic-hero">
+        <img class="about-architecture about-architecture--acropolis" src="assets/main/acropolis-1000.webp" alt="">
+        <img class="about-architecture about-architecture--capital" src="assets/main/capital-640.webp" alt="">
+        <svg class="about-architecture-drawing" viewBox="0 0 260 560" aria-hidden="true">
+          <g fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M28 174 130 110l102 64H28Zm10 14h184v24H38zm14 24v236m26-236v236m34-236v236m36-236v236m34-236v236m26-236v236M28 448h204v26H28zm-12 28h228v20H16z"/>
+            <path d="M14 504h232M130 42v68M110 60h40M98 77h64" stroke-dasharray="7 7"/>
+          </g>
+        </svg>
+        <div class="topic-hero__inner">
+          <p class="portfolio-route__eyebrow">Things I've built across</p>
+          <h1>Fullstack</h1>
+          <p class="portfolio-route__note">Systems built to keep working when things go wrong.</p>
+        </div>
+      </header>
+
+      <div class="topic-page__body">
+        <!-- ===== PROJECTS: cards are rendered from FULLSTACK_PROJECTS in fullstack.js ===== -->
+        <section class="topic-section" aria-labelledby="fullstack-projects-title">
+          <h2 class="topic-section__title" id="fullstack-projects-title">Projects</h2>
+          <div class="acc-list-wrap" id="fullstack-projects-list"></div>
+        </section>
+      </div>
+    </div>
+
+    <div class="know-me-page" hidden>
+      <div class="know-me-page__inner">
+        <p class="handwritten-kicker">A few ways to find me</p>
+        <h1>Know me better</h1>
+        <ul class="know-me-list">
+          <li><span>Twitter / X</span><a href="https://x.com/nakshatraavijay" target="_blank" rel="noopener noreferrer">x.com/nakshatraavijay</a></li>
+          <li><span>LinkedIn</span><a href="https://www.linkedin.com/in/nakshatra-thange/" target="_blank" rel="noopener noreferrer">linkedin.com/in/nakshatra-thange</a></li>
+          <li><span>GitHub</span><a href="https://github.com/Nakshatra-thange" target="_blank" rel="noopener noreferrer">github.com/Nakshatra-thange</a></li>
+          <li><span>Phone</span><a href="tel:+918999379616">+91 8999379616</a></li>
+          <li><span>Email</span><a href="mailto:nakshatrathange@gmail.com">nakshatrathange@gmail.com</a></li>
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -324,6 +505,10 @@
     </video>
   </noscript>
 
-  <script src="main.js?v=portfolio-home-20261123" defer></script>
+  <script src="main.js?v=passage-scroll-20261124n" defer></script>
+  <script src="accordion.js?v=passage-scroll-20261124n" defer></script>
+  <script src="voiceai.js?v=passage-scroll-20261124n" defer></script>
+  <script src="aiandme.js?v=passage-scroll-20261124n" defer></script>
+  <script src="fullstack.js?v=passage-scroll-20261124n" defer></script>
 </body>
 </html>
