@@ -247,9 +247,9 @@ body {
   outline-offset: 6px;
 }
 .folder--about { left: max(18px, calc((100vw - 1160px) / 2 - 210px)); top: 14%; }
-.folder--voice { right: max(18px, calc((100vw - 1160px) / 2 - 210px)); top: 32%; }
-.folder--ai { left: max(18px, calc((100vw - 1160px) / 2 - 210px)); top: 58%; }
-.folder--fullstack { right: max(18px, calc((100vw - 1160px) / 2 - 210px)); top: 76%; }
+.folder--voice { right: max(18px, calc((100vw - 1160px) / 2 - 210px)); top: 34%; }
+.folder--ai { left: max(18px, calc((100vw - 1160px) / 2 - 210px)); top: 54%; }
+.folder--fullstack { right: max(18px, calc((100vw - 1160px) / 2 - 210px)); top: 74%; }
 .atrium > .folder { z-index: 10; }
 .folder__visual {
   position: relative;
@@ -542,8 +542,8 @@ body {
   .folder { width: min(42vw, 170px); height: 112px; }
   .folder--about { left: 8px; top: 10%; }
   .folder--voice { right: 8px; top: 33%; }
-  .folder--ai { left: 8px; top: 59%; }
-  .folder--fullstack { right: 8px; top: 80%; }
+  .folder--ai { left: 8px; top: 56%; }
+  .folder--fullstack { right: 8px; top: 79%; }
 }
 
 /* Winding desktop composition: artwork follows a tall, central curve. */
@@ -587,10 +587,11 @@ body {
   /* Folders sit in the empty pockets the winding collage leaves along its sides,
      placed relative to the collage column (--scene) rather than the window edge. */
   .atrium { --scene: min(90vw, 1040px); --gutter: calc((100vw - var(--scene)) / 2); }
-  .folder--about { left: calc(var(--gutter) + 0.02 * var(--scene)); top: 11%; }
-  .folder--voice { right: calc(var(--gutter) + 0.015 * var(--scene)); top: 35%; }
-  .folder--fullstack { right: calc(var(--gutter) - 0.06 * var(--scene)); top: 50.5%; }
-  .folder--ai { left: calc(var(--gutter) + 0.02 * var(--scene)); top: 58%; }
+  /* Even steps down the page, alternating sides so they wind with the collage. */
+  .folder--about { left: calc(var(--gutter) + 0.02 * var(--scene)); top: 14%; }
+  .folder--voice { right: calc(var(--gutter) + 0.02 * var(--scene)); top: 34%; }
+  .folder--ai { left: calc(var(--gutter) + 0.02 * var(--scene)); top: 54%; }
+  .folder--fullstack { right: calc(var(--gutter) + 0.02 * var(--scene)); top: 74%; }
 }
 
 /* ---------- Client-side portfolio routes ---------- */
